@@ -22,14 +22,14 @@ def index():
 def save_value():
     value = request.json['value']
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO Values (Value) VALUES (%s)", (value,))
+    cursor.execute("INSERT INTO Values1 (Value) VALUES (%s)", (value,))
     conn.commit()
     return jsonify(success=True)
 
 @app.route('/values', methods=['GET'])
 def get_values():
     cursor = conn.cursor()
-    cursor.execute("SELECT Value FROM Values")
+    cursor.execute("SELECT Value FROM Values1")
     rows = cursor.fetchall()
     values = [row[0] for row in rows]
     return jsonify(values=values)
