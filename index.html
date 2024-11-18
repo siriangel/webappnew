@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persistent Text Box</title>
+</head>
+<body>
+    <h1>Enter Value</h1>
+    <input type="text" id="inputValue" placeholder="Enter something...">
+    <button onclick="saveValue()">Save</button>
+    <h2>Values:</h2>
+    <div id="valuesList"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            fetchValues();
+        });
+
+        function saveValue() {
+            const inputValue = document.getElementById('inputValue').value;
+            if (inputValue) {
+                fetch('/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ value: inputValue })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    fetchValues();
+                    document.getElementById('inputValue').value = '';
+                });
+            }
+        }
+
+        function fetchValues() {
+            fetch('/values')
+                .then(response => response.json())
+                .then(data => {
+                    const valuesList = document.getElementById('valuesList');
+                    valuesList.innerHTML = '';
+                    data.values.forEach(value => {
+                        const div = document.createElement('div');
+                        div.textContent = value;
+                        valuesList.appendChild(div);
+                    });
+                });
+        }
+    </script>
+</body>
+</html>
